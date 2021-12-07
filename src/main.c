@@ -1,26 +1,11 @@
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 
-// 逻辑
-#define BOOL  int
-#define TRUE   1
-#define FALSE  0
-
-// 棋盘尺寸的限制
-#define WIDTH_MAX  30
-#define HEIGHT_MAX  30
-#define WIDTH_MIN   5
-#define HEIGHT_MIN  5
+#include "search.h"
 
 // 坐标类型
 typedef struct {int x, y;} point_t;
 
 // 棋子类型
-enum Stone {kStnNo, kStnAi, kStnOp};
+typedef enum Stone {kStnNo, kStnAi, kStnOp} Stone;
 
 // 全局变量 //////////////////////////////////////////////////////////////////
 
@@ -29,7 +14,7 @@ enum Stone {kStnNo, kStnAi, kStnOp};
 enum Stone g_board[HEIGHT_MAX][WIDTH_MAX];
 
 // 棋盘实际使用的尺寸及默认值
-int g_width = 15, g_height = 15;
+int g_width = MAP_SIZE, g_height = MAP_SIZE;
 
 // 是否采用 SUGGEST 回应
 BOOL g_is_suggest = FALSE;
@@ -165,40 +150,38 @@ int CalcPointValue(point_t pt)
  */
 point_t SearchBestPoint(void)
 {
-    struct {int value; point_t pt;} best = {0}, o;
-    int i;
-
-
-
-    for (o.pt.y = 0; o.pt.y < g_height; ++o.pt.y) {
-        for (o.pt.x = 0; o.pt.x < g_width; ++o.pt.x) {
-            // 当坐标无子时，计算其价值，保存最佳点
-            if (BoardGet(o.pt) == kStnNo) {
-                if ((o.value = CalcPointValue(o.pt)) > best.value) {
-                    best = o;
-                }
+    ChessType map[MAP_SIZE][MAP_SIZE]={EMPTY};
+    int row=0, col=0;
+    point_t pt;
+    Stone stn;
+    for(int i=0;i<MAP_SIZE;++i)
+    {
+        for(int j=0;j<MAP_SIZE;++j)
+        {
+            pt.x = j;
+            pt.y = i;
+            stn = BoardGet(pt);
+            //enum Stone {kStnNo, kStnAi, kStnOp};
+            if(stn == kStnNo)
+            {
+                map[i][j]=EMPTY;
+            }
+            else if(stn == kStnAi)
+            {
+                map[i][j]=WHITE;
+            }
+            else if(stn == kStnOp)
+            {
+                map[i][j]=BLACK;
+            }
+            else
+            {
+                map[i][j]=EMPTY;
             }
         }
     }
-
-    // 为增加着法的随机性，再随机找个不逊的着点
-    // 以当前时间作为伪随机种子
-    srand(time(NULL));
-
-    // 随机选点，取中最优
-    for (i = 0; i < 100; ++i) {
-        o.pt.x = rand() % g_width;
-        o.pt.y = rand() % g_height;
-
-        // 当坐标无子时，计算其价值，保存最佳点
-        if (BoardGet(o.pt) == kStnNo) {
-            if ((o.value = CalcPointValue(o.pt)) >= best.value) {
-                best = o;
-            }
-        }
-    }
-
-    return best.pt;
+    minMaxSearch(map, &pt.x, &pt.y, 1);
+    return pt;
 }
 
 // 输出命令 //////////////////////////////////////////////////////////////////

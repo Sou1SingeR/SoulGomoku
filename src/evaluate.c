@@ -372,7 +372,7 @@ int table_A(enum ChessType str[4], int x) {
 //valueD计算
 void value_B(enum ChessType chessMap[MAP_SIZE][MAP_SIZE], int x, int valueMap[MAP_SIZE][MAP_SIZE]) {
     int p;
-    memset(valueMap, 0, sizeof(int) * 225);
+    memset(valueMap, 0, sizeof(int) * MAP_SIZE * MAP_SIZE);
     enum ChessType str[4] = {EMPTY};
     for (int i = 0; i < MAP_SIZE; i++) {
         for (int j = 0; j < MAP_SIZE; j++) {
@@ -453,7 +453,7 @@ void value_B(enum ChessType chessMap[MAP_SIZE][MAP_SIZE], int x, int valueMap[MA
 //valueA计算
 void value_A(enum ChessType chessMap[MAP_SIZE][MAP_SIZE], int x, int valueMap[MAP_SIZE][MAP_SIZE]) {
     int p;
-    memset(valueMap, 0, sizeof(int) * 225);
+    memset(valueMap, 0, sizeof(int) * MAP_SIZE * MAP_SIZE);
     enum ChessType str[4] = {EMPTY};
     for (int i = 0; i < MAP_SIZE; i++) {
         for (int j = 0; j < MAP_SIZE; j++) {
@@ -1663,6 +1663,9 @@ int findTheBest(enum ChessType chessMap[MAP_SIZE][MAP_SIZE], int expectedLen, Po
                 continue;
             }
             valueS[i][j] = valueA[i][j] + valueD[i][j];
+//            if (i == 4 && j == 5) {
+//                printf("%d, %d, %d", valueS[i][j], valueA[i][j], valueD[i][j]);
+//            }
             if (valueA[i][j] > maxA) {
                 maxA = valueA[i][j];
                 xA = i;
@@ -2531,7 +2534,7 @@ int findTheBest(enum ChessType chessMap[MAP_SIZE][MAP_SIZE], int expectedLen, Po
 
 //白方做棋
     Point bestPoints[1000];
-    int point_num = 0;
+    int pointNum = 0;
 //    if (maxD > 140) {
 //        row = xD;
 //        col = yD;
@@ -2541,25 +2544,29 @@ int findTheBest(enum ChessType chessMap[MAP_SIZE][MAP_SIZE], int expectedLen, Po
     for (i = 0; i < MAP_SIZE; i++) {
         for (j = 0; j < MAP_SIZE; j++) {
             if (chessMap[i][j] != EMPTY) continue;
-            bestPoints[point_num].x = i;
-            bestPoints[point_num].y = j;
-            bestPoints[point_num].value = valueS[i][j];
-            ++point_num;
+            bestPoints[pointNum].x = i;
+            bestPoints[pointNum].y = j;
+            bestPoints[pointNum].value = valueS[i][j];
+//            if (bestPoints[pointNum].value > 0) {
+//                printf("x: %d, y: %d, value: %d\n", i, j, bestPoints[pointNum].value);
+//            }
+            ++pointNum;
         }
     }
+    int realNum = min(expectedLen, pointNum);
 
-    for (i = min(expectedLen, point_num); i > 0; --i) {
-        BuildMaxHeap(bestPoints, point_num);
-        Swap(bestPoints, point_num);
+    for (i = realNum; i > 0; --i) {
+        BuildMaxHeap(bestPoints, pointNum - realNum + i);
+        Swap(bestPoints, pointNum - realNum + i);
     }
-    for (i = min(expectedLen, point_num); i > 0; --i)
+    for (i = pointNum - 1, j = 0; j < min(pointNum, expectedLen); ++j, --i)
     {
-        points[i].x = bestPoints[i].x;
-        points[i].y = bestPoints[i].y;
-        points[i].value = bestPoints[i].value;
+        points[j].x = bestPoints[i].x;
+        points[j].y = bestPoints[i].y;
+        points[j].value = bestPoints[i].value;
     }
 
-    return min(expectedLen, point_num);
+    return min(expectedLen, pointNum);
 }
 
 //int main()

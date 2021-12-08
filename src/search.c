@@ -2,11 +2,12 @@
 #include "search.h"
 
 int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth) {
-    Point bestPoints[10];
-    int side = depth % 2; // 0 -> ai; 1 -> opponent
+    Point bestPoints[20];
     int nextNum = findTheBest(map, SEARCH_WIDTH, bestPoints);
 
-    if (depth == 0) {
+    if (depth == 0 || nextNum == 1) {
+        *x = bestPoints[0].x;
+        *y = bestPoints[0].y;
         return bestPoints[0].value;
     }
 
@@ -14,11 +15,7 @@ int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth) {
     for (int i = 0; i < MAP_SIZE; ++i) {
         for (int j = 0; j < MAP_SIZE; ++j) {
             searchMap[i][j] = map[i][j];
-            if (side == 0) {
-                continue;
-            }
-
-            // ai 与对手互换
+            // 双方交换
             if (searchMap[i][j] == WHITE) {
                 searchMap[i][j] = BLACK;
             }
@@ -27,12 +24,17 @@ int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth) {
             }
         }
     }
+    int bestPointValue = -1;
+    int x0, y0;
     for (int i = 0; i < nextNum; ++i) {
-        if (side != 0) {
-            searchMap[bestPoints[i].x][bestPoints[i].y] = WHITE;
-        }
-        int maxValue = minMaxSearch(searchMap, )
+        searchMap[bestPoints[i].x][bestPoints[i].y] = BLACK;
+        int maxValue = minMaxSearch(searchMap, &x0, &y0, depth - 1);
         searchMap[bestPoints[i].x][bestPoints[i].y] = EMPTY;
+        if (maxValue > bestPointValue) {
+            bestPointValue = maxValue;
+            *x = bestPoints[i].x;
+            *y = bestPoints[i].y;
+        }
     }
-    return;
-};
+    return bestPointValue;
+}

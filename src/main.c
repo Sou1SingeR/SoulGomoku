@@ -180,7 +180,7 @@ point_t SearchBestPoint(void)
             }
         }
     }
-    minMaxSearch(map, &pt.x, &pt.y, 1);
+    minMaxSearch(map, &pt.x, &pt.y, 6);
     return pt;
 }
 

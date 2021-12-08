@@ -7,7 +7,7 @@
 
 #define SEARCH_WIDTH 10
 
-void minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int side);
+int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth);
 
 
 #endif //SOULGOMOKU_SEARCH_H

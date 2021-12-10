@@ -1,5 +1,13 @@
 #include "common.h"
 
+
+// 方向分别为横向、纵向、斜向、反斜向
+int directX[4] = {1, 0, 1, -1};
+int directY[4] = {0, 1, 1, 1};
+int startNum[4] = {BOARD_SIZE, BOARD_SIZE, BOARD_SIZE * 2 - 1, BOARD_SIZE * 2 - 1};
+Coord start[4][BOARD_SIZE * 2];
+
+
 int inBoard(int x, int y) {
     return x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE;
 }
@@ -41,14 +49,14 @@ void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean) {
         system("cls");
     }
     printf("\n");
-    for (int i = BOARD_SIZE - 1; i > 0; ++i) {
+    for (int i = BOARD_SIZE - 1; i >= 0; --i) {
         printf("%2d  ", i);
         for (int j = 0; j < BOARD_SIZE; ++j) {
-            if (board[i][j] == 0) {
+            if (board[j][i] == 0) {
                 printf(" . ");
-            } else if (board[i][j] == 1) {
+            } else if (board[j][i] == 1) {
                 printf(" O ");
-            } else if (board[i][j] == -1) {
+            } else if (board[j][i] == -1) {
                 printf(" X ");
             }
         }
@@ -59,6 +67,13 @@ void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean) {
         printf("%2d ", i);
     }
     printf("\n\n");
+}
+
+void generateBoard(int board[BOARD_SIZE][BOARD_SIZE], Coord *move, int moveNum, int firstSide) {
+    int side = firstSide;
+    for (int i = 0; i < moveNum; ++i, side *= -1) {
+        board[move[i].x][move[i].y] = side;
+    }
 }
 
 void init() {

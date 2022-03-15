@@ -5,16 +5,20 @@
 // 从给定的局面中，选出 expectedNum 个最佳的点
 int pickPoint(int board[BOARD_SIZE][BOARD_SIZE], int expectedNum, Coord *bestPoints) {
     if (searchToFivePoint(board, 1, bestPoints)) {
+        // 己方胜利
         return 1;
     }
     if (searchToFivePoint(board, -1, bestPoints)) {
+        // 对方即将胜利，防守点唯一
         return 1;
     }
     if (searchToFourPoint(board, 1, bestPoints)) {
+        // 己方可以活四
         return 1;
     }
     int num = searchToFourPoint(board, -1, bestPoints);
     if (num) {
+        // 防守对方的若干活三
         return num;
     }
 

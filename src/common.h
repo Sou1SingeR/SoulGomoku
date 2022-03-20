@@ -11,6 +11,7 @@
 #define Stn int
 #define SELF 1
 #define OP -1
+#define EM 0
 #define BOARD_SIZE 15
 
 typedef struct Coord {
@@ -34,6 +35,18 @@ extern Coord start[4][BOARD_SIZE * 2];
 
 // 判断是否在棋盘内
 int inBoard(int x, int y);
+
+// 判断是否为空位
+int isEmpty(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
+
+// 判断是否为己方棋子
+int isSelf(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
+
+// 判断是否为对方棋子
+int isOpponent(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
+
+// 获取另一种棋子类型
+int getOp(int side);
 
 int doSth();
 

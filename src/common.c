@@ -12,6 +12,22 @@ int inBoard(int x, int y) {
     return x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE;
 }
 
+int isEmpty(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
+    return inBoard(x, y) && board[x][y] == EM;
+}
+
+int isSelf(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
+    return inBoard(x, y) && board[x][y] == SELF;
+}
+
+int isOpponent(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
+    return inBoard(x, y) && board[x][y] == OP;
+}
+
+int getOp(int side) {
+    return side * -1;
+}
+
 int doSth() {
     return 0;
 }

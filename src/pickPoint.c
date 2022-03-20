@@ -75,7 +75,7 @@ int searchToFivePoint(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point)
     return 0;
 }
 
-// 寻找指定 side 的第一个成活四点，return: 寻找到的点个数，range: [0, 1]
+// 寻找指定 side 的第一个成活四点，return: 寻找到的点个数，range: [0, 3]
 // 原理：对最近四点的 empty 和 self 计数，如 empty 有 1 个且 self 有 3 个且该四点的两头都为 empty，则取最近一次的 empty 点坐标。
 int searchToFourPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point) {
     // d 遍历所有方向, i 遍历该方向的所有起点, j 遍历对应的 1 维空间
@@ -147,4 +147,10 @@ int searchToFourPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point)
         }
     }
     return 0;
+}
+
+// 寻找指定 side 的最佳的 expectedNum 个点，return：寻找到的点个数，range: [1, expectedNum]
+// 原理：对最近四点的 SELF/EM/OP 计数，根据棋型表来进行加分。
+int searchBestPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, int expectedNum) {
+    return 1;
 }

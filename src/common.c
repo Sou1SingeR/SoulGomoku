@@ -28,6 +28,10 @@ int getOp(int side) {
     return side * -1;
 }
 
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
 int doSth() {
     return 0;
 }

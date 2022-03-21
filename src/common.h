@@ -48,6 +48,8 @@ int isOpponent(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 // 获取另一种棋子类型
 int getOp(int side);
 
+int max(int a, int b);
+
 int doSth();
 
 // 初始化遍历方向起始点
@@ -61,4 +63,5 @@ void generateBoard(int board[BOARD_SIZE][BOARD_SIZE], Coord *move, int moveNum, 
 
 // 初始化
 void init();
+
 

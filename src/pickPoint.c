@@ -150,7 +150,88 @@ int searchToFourPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point)
 }
 
 // 寻找指定 side 的最佳的 expectedNum 个点，return：寻找到的点个数，range: [1, expectedNum]
-// 原理：对最近四点的 SELF/EM/OP 计数，根据棋型表来进行加分。
-int searchBestPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, int expectedNum) {
+// 原理：对 [-4, 0], [-4, -1] 的 SELF/EM/OP 计数，根据棋型表来进行加分。
+int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, int expectedNum) {
+    int score[BOARD_SIZE][BOARD_SIZE] = {0};
+    // d 遍历所有方向, i 遍历该方向的所有起点, j 遍历对应的 1 维空间
+    for (int d = 0; d < 4; ++d) {
+        for (int i = 0; i < startNum[d]; ++i) {
+            int startX = start[d][i].x;
+            int startY = start[d][i].y;
+            if (!inBoard(startX + directX[d] * 4, startY + directY[d] * 4)) {
+                // 长度不够 5，该一维空间不具备价值
+                continue;
+            }
+
+            int cacheIdx = 0;
+            int cache[5] = {9, 9, 9, 9, 9};
+            int pattern1[3] = {0}; // [-4, 0] EM, SELF, OP 的数量
+            int pattern2[3] = {0}; // [-4, -1] EM, SELF, OP 的数量
+            int thisScore[BOARD_SIZE] = {0};
+
+            for (int j = 0; j < 5; ++j) {
+                int x = startX + directX[d] * j;
+                int y = startY + directY[d] * j;
+                int pointStatus = board[x][y];
+                cache[j] = pointStatus;
+                addOne(pattern1, pointStatus);
+                if (j != 4) {
+                    addOne(pattern2, pointStatus);
+                }
+            }
+            for (int j = 5; ; ++j) {
+                int x = startX + directX[d] * j;
+                int y = startY + directY[d] * j;
+                if (!inBoard(x, y)) break;
+
+                // TODO: 计分
+                setScore(thisScore, cache, pattern1, pattern2);
+
+                // cache 操作
+                minusOne(pattern1, cache[cacheIdx]);
+                minusOne(pattern2, cache[cacheIdx]);
+                cache[cacheIdx] = board[x][y];
+                cacheIdx += cacheIdx == 4 ? -4 : 1;
+                addOne(pattern1, board[x][y]);
+                addOne(pattern2, board[x - directX[d]][y - directY[d]]);
+            }
+
+            for (int j = 0; ; ++j) {
+                int x = startX + directX[d] * j;
+                int y = startY + directY[d] * j;
+                if (!inBoard(x, y)) break;
+                board[x][y] += thisScore[j];
+            }
+        }
+    }
     return 1;
+}
+
+void addOne(int num[3], int type) {
+    // 棋型数组计数器中对应的棋子类型加一
+    if (type == EM) {
+        num[0]++;
+    } else if (type == SELF) {
+        num[1]++;
+    } else if (type == OP) {
+        num[2]++;
+    }
+    return 0;
+}
+
+void minusOne(int num[3], int type) {
+    // 棋型数组计数器中对应的棋子类型减一
+    if (type == EM) {
+        num[0]--;
+    } else if (type == SELF) {
+        num[1]--;
+    } else if (type == OP) {
+        num[2]--;
+    }
+    return 0;
+}
+
+void setScore(int score[BOARD_SIZE], int cache[5], int pattern1[3], int pattern2[3]) {
+    // 更新一维空间的分数
+
 }

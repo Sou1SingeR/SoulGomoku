@@ -19,4 +19,8 @@ void addOne(int num[3], int type);
 
 void minusOne(int num[3], int type);
 
-void setScore(int score[BOARD_SIZE], int cache[5], int pattern1[3], int pattern2[3]);
+void setScore(int score[BOARD_SIZE], Coord fivePoint[5], int board[BOARD_SIZE][BOARD_SIZE], int pattern1[3], int pattern2[3], int bothEmpty);
+
+int getTopN(int score[BOARD_SIZE][BOARD_SIZE], Point bestPoints[100], int expectedN);
+
+void buildMaxHeap(Point *heap, int l, int p);

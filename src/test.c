@@ -42,40 +42,5 @@ int main() {
 //    }
 }
 
-//void printBoard(ChessType board[MAP_SIZE][MAP_SIZE]) {
-//    printf("\n");
-//    for (int i = 0; i < MAP_SIZE; ++i) {
-//        printf("%2d  ", i);
-//        for (int j = 0; j < MAP_SIZE; ++j) {
-//            if (board[i][j] == EMPTY) {
-//                printf(" . ");
-//            } else if (board[i][j] == WHITE) {
-//                printf(" O ");
-//            } else if (board[i][j] == BLACK) {
-//                printf(" X ");
-//            }
-//        }
-//        printf("\n");
-//    }
-//    printf("    ");
-//    for (int i = 0; i < MAP_SIZE; ++i) {
-//        printf("%2d ", i);
-//    }
-//    printf("\n\n");
-//}
-//
-//void revertSide(ChessType board[MAP_SIZE][MAP_SIZE]) {
-//    for (int i = 0; i < MAP_SIZE; ++i) {
-//        for (int j = 0; j < MAP_SIZE; ++j) {
-//            if (board[i][j] == EMPTY) {
-//                continue;
-//            } else if (board[i][j] == WHITE) {
-//                board[i][j] = BLACK;
-//            } else if (board[i][j] == BLACK) {
-//                board[i][j] = WHITE;
-//            }
-//        }
-//    }
-//}
 
 

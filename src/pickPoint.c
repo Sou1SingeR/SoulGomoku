@@ -185,7 +185,13 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
                 if (!inBoard(x, y)) break;
 
                 // TODO: 计分
-                setScore(thisScore, cache, pattern1, pattern2);
+                int bothEmpty = isEmpty(board, x, y) && isEmpty(board, x - directX[d] * 5, y - directY[d] * 5);
+                Coord fivePoint[5];
+                for (int k = 0; k < 5; ++k) {
+                    fivePoint[5 - 1 - k].x = x - directX[d] * k;
+                    fivePoint[5 - 1 - k].y = y - directY[d] * k;
+                }
+                setScore(thisScore, fivePoint, board, pattern1, pattern2, bothEmpty);
 
                 // cache 操作
                 minusOne(pattern1, cache[cacheIdx]);
@@ -204,7 +210,10 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
             }
         }
     }
-    return 1;
+
+    Point bestPoints[100];
+    int realNum = getTopN(score, bestPoints, 10);
+    return realNum;
 }
 
 void addOne(int num[3], int type) {
@@ -216,7 +225,6 @@ void addOne(int num[3], int type) {
     } else if (type == OP) {
         num[2]++;
     }
-    return 0;
 }
 
 void minusOne(int num[3], int type) {
@@ -228,10 +236,109 @@ void minusOne(int num[3], int type) {
     } else if (type == OP) {
         num[2]--;
     }
-    return 0;
 }
 
-void setScore(int score[BOARD_SIZE], int cache[5], int pattern1[3], int pattern2[3]) {
+void setScore(int score[BOARD_SIZE], Coord fivePoint[5], int board[BOARD_SIZE][BOARD_SIZE], int pattern1[3], int pattern2[3], int bothEmpty) {
+    // 分数表
+    int attackSleepScore[4] = {0, 9999, 99999, 999999};
+    int attackActiveScore[3] = {10000, 100000, 1000000};
+    int defenceSleepScore[4] = {0, 0, 9999, 99999};
+    int defenceActiveScore[3] = {0, 10000, 100000};
+
     // 更新一维空间的分数
-
+    if (pattern1[2] == 0) {
+        // 眠棋型攻击
+        int worth = attackSleepScore[pattern1[1]];
+        for (int i = 0; i < 5; ++i) {
+            if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
+                score[i] = max(score[i], worth);
+            }
+        }
+    }
+    if (pattern2[2] == 0 && bothEmpty) {
+        // 活棋型攻击
+        int worth = attackActiveScore[pattern2[1]];
+        for (int i = 0; i < 4; ++i) {
+            if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
+                score[i] = max(score[i], worth);
+            }
+        }
+    }
+    if (pattern1[1] == 0) {
+        // 眠棋型防守
+        int worth = defenceSleepScore[pattern1[1]];
+        for (int i = 0; i < 5; ++i) {
+            if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
+                score[i] = max(score[i], worth);
+            }
+        }
+    }
+    if (pattern2[2] == 0 && bothEmpty) {
+        // 活棋型防守
+        // 有 bug -> 数字为空，X 为 OP，1XX456 的 5 不应有分
+        int worth = defenceActiveScore[pattern2[1]];
+        for (int i = 0; i < 4; ++i) {
+            if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
+                score[i] = max(score[i], worth);
+            }
+        }
+    }
 }
+
+int getTopN(int score[BOARD_SIZE][BOARD_SIZE], Point *bestPoints, int expectedN) {
+    Point maxHeap[BOARD_SIZE * BOARD_SIZE];
+    int l = 0;
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            if (score[i][j] == 0) {
+                continue;
+            }
+            maxHeap[l].x = i;
+            maxHeap[l].y = j;
+            maxHeap[l].value = score[i][j];
+            ++l;
+        }
+    }
+    for (int i = l / 2 - 1; i >= 0; --i) {
+        // 构造大顶堆
+        buildMaxHeap(maxHeap, l, i);
+    }
+    int n = min(expectedN, l);
+    for (int i = 0; i < n; ++i) {
+        // 依次取点
+        bestPoints[i] = maxHeap[0];
+        maxHeap[0] = maxHeap[--l];
+        buildMaxHeap(maxHeap, l, 0);
+    }
+    return n;
+}
+
+void buildMaxHeap(Point *heap, int l, int p) {
+    if (p > l) {
+        printf("error: length exceeds limit(p > n).\n");
+        return;
+    }
+    if (p > l / 2 - 1) {
+        // 叶子结点
+        return;
+    }
+    if (p == l / 2 - 1 && l % 2 == 0) {
+        // 只有左子结点
+        Point tmp = heap[p];
+        heap[p] = heap[p * 2 + 1];
+        heap[p * 2 + 1] = tmp;
+        return;
+    }
+    // 有两个子结点
+    int pMax = heap[p * 2 + 1].value > heap[p * 2 + 2].value ? p * 2 + 1 : p * 2 + 2;
+    Point tmp = heap[p];
+    heap[p] = heap[pMax];
+    heap[pMax] = tmp;
+    buildMaxHeap(heap, l, pMax);
+}
+
+
+
+
+
+

@@ -50,6 +50,8 @@ int getOp(int side);
 
 int max(int a, int b);
 
+int min(int a, int b);
+
 int doSth();
 
 // 初始化遍历方向起始点

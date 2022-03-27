@@ -324,6 +324,9 @@ void buildMaxHeap(Point *heap, int l, int p) {
     }
     if (p == l / 2 - 1 && l % 2 == 0) {
         // 只有左子结点
+        if (heap[p].value > heap[p * 2 + 1].value) {
+            return;
+        }
         Point tmp = heap[p];
         heap[p] = heap[p * 2 + 1];
         heap[p * 2 + 1] = tmp;
@@ -331,6 +334,9 @@ void buildMaxHeap(Point *heap, int l, int p) {
     }
     // 有两个子结点
     int pMax = heap[p * 2 + 1].value > heap[p * 2 + 2].value ? p * 2 + 1 : p * 2 + 2;
+    if (heap[p].value > heap[pMax].value) {
+        return;
+    }
     Point tmp = heap[p];
     heap[p] = heap[pMax];
     heap[pMax] = tmp;

@@ -4,27 +4,26 @@
 
 // 从给定的局面中，选出 expectedNum 个最佳的点
 int pickPoint(int board[BOARD_SIZE][BOARD_SIZE], int expectedNum, Coord *bestPoints) {
-    if (searchToFivePoint(board, 1, bestPoints)) {
+    if (searchToFivePoint(board, SELF, bestPoints)) {
         // 己方胜利
         return 1;
     }
-    if (searchToFivePoint(board, -1, bestPoints)) {
+    if (searchToFivePoint(board, OP, bestPoints)) {
         // 对方即将胜利，防守点唯一
         return 1;
     }
-    if (searchToFourPoint(board, 1, bestPoints)) {
+    if (searchToFourPoint(board, SELF, bestPoints)) {
         // 己方可以活四
         return 1;
     }
-    int num = searchToFourPoint(board, -1, bestPoints);
+    int num = searchToFourPoint(board, OP, bestPoints);
     if (num) {
         // 防守对方的若干活三
         return num;
     }
 
-    bestPoints[0].x = BOARD_SIZE / 2;
-    bestPoints[0].y = BOARD_SIZE / 2;
-    return 1;
+    num = searchBestPoints(board, SELF, bestPoints, expectedNum);
+    return num;
 }
 
 // 寻找指定 side 的第一个成五点，return: 寻找到的点个数，range: [0, 1]
@@ -119,7 +118,7 @@ int searchToFourPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point)
                     Coord right = {x + directX[d], y + directY[d]};
                     if (board[left.x][left.y] == 0 && board[right.x][right.y] == 0) {
                         // 左右都为空，找到目标，返回 point
-                        if (side == 1) {
+                        if (side == SELF) {
                             return 1;
                         }
                         // 对方的活三，需返回 2~3 个防守点
@@ -179,10 +178,20 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
                     addOne(pattern2, pointStatus);
                 }
             }
-            for (int j = 5; ; ++j) {
+            for (int j = 5 - 1; ; ++j) {
                 int x = startX + directX[d] * j;
                 int y = startY + directY[d] * j;
                 if (!inBoard(x, y)) break;
+
+                // cache 操作
+                if (j != 5 - 1) {
+                    minusOne(pattern1, cache[cacheIdx]);
+                    minusOne(pattern2, cache[cacheIdx]);
+                    cache[cacheIdx] = board[x][y];
+                    cacheIdx += cacheIdx == 4 ? -4 : 1;
+                    addOne(pattern1, board[x][y]);
+                    addOne(pattern2, board[x - directX[d]][y - directY[d]]);
+                }
 
                 // TODO: 计分
                 int bothEmpty = isEmpty(board, x, y) && isEmpty(board, x - directX[d] * 5, y - directY[d] * 5);
@@ -191,28 +200,26 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
                     fivePoint[5 - 1 - k].x = x - directX[d] * k;
                     fivePoint[5 - 1 - k].y = y - directY[d] * k;
                 }
-                setScore(thisScore, fivePoint, board, pattern1, pattern2, bothEmpty);
-
-                // cache 操作
-                minusOne(pattern1, cache[cacheIdx]);
-                minusOne(pattern2, cache[cacheIdx]);
-                cache[cacheIdx] = board[x][y];
-                cacheIdx += cacheIdx == 4 ? -4 : 1;
-                addOne(pattern1, board[x][y]);
-                addOne(pattern2, board[x - directX[d]][y - directY[d]]);
+                setScore(thisScore, j, fivePoint, board, pattern1, pattern2, bothEmpty);
             }
 
             for (int j = 0; ; ++j) {
                 int x = startX + directX[d] * j;
                 int y = startY + directY[d] * j;
                 if (!inBoard(x, y)) break;
-                board[x][y] += thisScore[j];
+                score[x][y] += thisScore[j];
             }
         }
     }
 
+    showBoardWithScore(board, score, 1);
+
     Point bestPoints[100];
-    int realNum = getTopN(score, bestPoints, 10);
+    int realNum = getTopN(score, bestPoints, expectedNum);
+    for (int i = 0; i < realNum; ++i) {
+        point[i].x = bestPoints[i].x;
+        point[i].y = bestPoints[i].y;
+    }
     return realNum;
 }
 
@@ -238,7 +245,7 @@ void minusOne(int num[3], int type) {
     }
 }
 
-void setScore(int score[BOARD_SIZE], Coord fivePoint[5], int board[BOARD_SIZE][BOARD_SIZE], int pattern1[3], int pattern2[3], int bothEmpty) {
+void setScore(int score[BOARD_SIZE], int pos, Coord fivePoint[5], int board[BOARD_SIZE][BOARD_SIZE], int pattern1[3], int pattern2[3], int bothEmpty) {
     // 分数表
     int attackSleepScore[4] = {0, 9999, 99999, 999999};
     int attackActiveScore[3] = {10000, 100000, 1000000};
@@ -251,7 +258,7 @@ void setScore(int score[BOARD_SIZE], Coord fivePoint[5], int board[BOARD_SIZE][B
         int worth = attackSleepScore[pattern1[1]];
         for (int i = 0; i < 5; ++i) {
             if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
-                score[i] = max(score[i], worth);
+                score[pos + i] = max(score[pos + i], worth);
             }
         }
     }
@@ -260,7 +267,7 @@ void setScore(int score[BOARD_SIZE], Coord fivePoint[5], int board[BOARD_SIZE][B
         int worth = attackActiveScore[pattern2[1]];
         for (int i = 0; i < 4; ++i) {
             if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
-                score[i] = max(score[i], worth);
+                score[pos + i] = max(score[pos + i], worth);
             }
         }
     }
@@ -269,7 +276,7 @@ void setScore(int score[BOARD_SIZE], Coord fivePoint[5], int board[BOARD_SIZE][B
         int worth = defenceSleepScore[pattern1[1]];
         for (int i = 0; i < 5; ++i) {
             if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
-                score[i] = max(score[i], worth);
+                score[pos + i] = max(score[pos + i], worth);
             }
         }
     }
@@ -279,7 +286,7 @@ void setScore(int score[BOARD_SIZE], Coord fivePoint[5], int board[BOARD_SIZE][B
         int worth = defenceActiveScore[pattern2[1]];
         for (int i = 0; i < 4; ++i) {
             if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
-                score[i] = max(score[i], worth);
+                score[pos + i] = max(score[pos + i], worth);
             }
         }
     }
@@ -290,7 +297,7 @@ int getTopN(int score[BOARD_SIZE][BOARD_SIZE], Point *bestPoints, int expectedN)
     int l = 0;
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
-            if (score[i][j] == 0) {
+            if (score[i][j] <= 40000) {
                 continue;
             }
             maxHeap[l].x = i;

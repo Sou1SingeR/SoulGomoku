@@ -9,3 +9,6 @@
 
 void t_getTopN();
 
+void t_pickPoint();
+
+void t_setScore();

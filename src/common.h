@@ -60,6 +60,9 @@ void initDirectionStartPoint();
 // 将棋盘状态打印到控制台
 void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean);
 
+// 将棋盘状态以及分数打印到控制台
+void showBoardWithScore(int board[BOARD_SIZE][BOARD_SIZE], int score[BOARD_SIZE][BOARD_SIZE], int ifClean);
+
 // 生成指定局面
 void generateBoard(int board[BOARD_SIZE][BOARD_SIZE], Coord *move, int moveNum, int firstSide);
 

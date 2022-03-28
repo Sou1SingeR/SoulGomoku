@@ -67,7 +67,6 @@ void initDirectionStartPoint() {
     }
 }
 
-
 void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean) {
     if (ifClean) {
         system("cls");
@@ -89,6 +88,38 @@ void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean) {
     printf("    ");
     for (int i = 0; i < BOARD_SIZE; ++i) {
         printf("%2d ", i);
+    }
+    printf("\n\n");
+}
+
+void showBoardWithScore(int board[BOARD_SIZE][BOARD_SIZE], int score[BOARD_SIZE][BOARD_SIZE], int ifClean) {
+//    if (ifClean) {
+//        system("cls");
+//    }
+    printf("\n");
+    for (int i = BOARD_SIZE - 1; i >= 0; --i) {
+        printf("\n");
+        printf("%2d  ", i);
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            printf("   ");
+            if (board[j][i] == 0) {
+                printf("[.]");
+            } else if (board[j][i] == 1) {
+                printf("[O]");
+            } else if (board[j][i] == -1) {
+                printf("[X]");
+            }
+            printf("   ");
+        }
+        printf("\n   ");
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            printf(" %7d ", score[j][i]);
+        }
+        printf("\n");
+    }
+    printf("    ");
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        printf("   %2d    ", i);
     }
     printf("\n\n");
 }

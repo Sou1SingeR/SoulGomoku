@@ -1,9 +1,9 @@
 
 #include "search.h"
 
-int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth) {
+int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth, int width) {
     Point bestPoints[20];
-    int nextNum = findTheBest(map, SEARCH_WIDTH, bestPoints);
+    int nextNum = findTheBest(map, width, bestPoints);
 
     if (depth == 0 || nextNum == 1) {
         *x = bestPoints[0].x;
@@ -28,7 +28,7 @@ int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth) {
     int x0, y0;
     for (int i = 0; i < nextNum; ++i) {
         searchMap[bestPoints[i].x][bestPoints[i].y] = BLACK;
-        int maxValue = minMaxSearch(searchMap, &x0, &y0, depth - 1);
+        int maxValue = minMaxSearch(searchMap, &x0, &y0, depth - 1, width);
         searchMap[bestPoints[i].x][bestPoints[i].y] = EMPTY;
         if (maxValue > bestPointValue) {
             bestPointValue = maxValue;

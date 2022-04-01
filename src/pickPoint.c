@@ -200,7 +200,7 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
                     fivePoint[5 - 1 - k].x = x - directX[d] * k;
                     fivePoint[5 - 1 - k].y = y - directY[d] * k;
                 }
-                setScore(thisScore, j, fivePoint, board, pattern1, pattern2, bothEmpty);
+                setScore(thisScore, j - (5 - 1), fivePoint, board, pattern1, pattern2, bothEmpty);
             }
 
             for (int j = 0; ; ++j) {
@@ -219,6 +219,7 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
     for (int i = 0; i < realNum; ++i) {
         point[i].x = bestPoints[i].x;
         point[i].y = bestPoints[i].y;
+//        printf("rank %d: (%d, %d) - %d\n", i + 1, bestPoints[i].x, bestPoints[i].y, bestPoints[i].value);
     }
     return realNum;
 }
@@ -273,17 +274,17 @@ void setScore(int score[BOARD_SIZE], int pos, Coord fivePoint[5], int board[BOAR
     }
     if (pattern1[1] == 0) {
         // 眠棋型防守
-        int worth = defenceSleepScore[pattern1[1]];
+        int worth = defenceSleepScore[pattern1[2]];
         for (int i = 0; i < 5; ++i) {
             if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
                 score[pos + i] = max(score[pos + i], worth);
             }
         }
     }
-    if (pattern2[2] == 0 && bothEmpty) {
+    if (pattern2[1] == 0 && bothEmpty) {
         // 活棋型防守
         // 有 bug -> 数字为空，X 为 OP，1XX456 的 5 不应有分
-        int worth = defenceActiveScore[pattern2[1]];
+        int worth = defenceActiveScore[pattern2[2]];
         for (int i = 0; i < 4; ++i) {
             if (board[fivePoint[i].x][fivePoint[i].y] == EM) {
                 score[pos + i] = max(score[pos + i], worth);

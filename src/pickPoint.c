@@ -3,7 +3,7 @@
 
 
 // 从给定的局面中，选出 expectedNum 个最佳的点
-int pickPoint(int board[BOARD_SIZE][BOARD_SIZE], int expectedNum, Coord *bestPoints) {
+int pickPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, int expectedNum, Coord *bestPoints) {
     if (searchToFivePoint(board, SELF, bestPoints)) {
         // 己方胜利
         return 1;
@@ -21,9 +21,15 @@ int pickPoint(int board[BOARD_SIZE][BOARD_SIZE], int expectedNum, Coord *bestPoi
         // 防守对方的若干活三
         return num;
     }
-
-    num = searchBestPoints(board, SELF, bestPoints, expectedNum);
-    return num;
+    if (side == SELF) {
+        num = searchBestPoints(board, SELF, bestPoints, expectedNum);
+        return num;
+    } else {
+        int newBoard[BOARD_SIZE][BOARD_SIZE];
+        revertBoard(board, newBoard);
+        num = searchBestPoints(newBoard, SELF, bestPoints, expectedNum);
+        return num;
+    }
 }
 
 // 寻找指定 side 的第一个成五点，return: 寻找到的点个数，range: [0, 1]

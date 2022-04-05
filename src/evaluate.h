@@ -7,4 +7,4 @@
 #endif //SOULGOMOKU_EVALUATE_H
 
 
-int evaluateSituation(int board[BOARD_SIZE][BOARD_SIZE]);
+int evaluate(int board[BOARD_SIZE][BOARD_SIZE]);

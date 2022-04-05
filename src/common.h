@@ -54,6 +54,12 @@ int min(int a, int b);
 
 int doSth();
 
+// 复制棋盘
+void copyBoard(int board[BOARD_SIZE][BOARD_SIZE], int newBoard[BOARD_SIZE][BOARD_SIZE]);
+
+// 复制并翻转棋盘
+void revertBoard(int board[BOARD_SIZE][BOARD_SIZE], int newBoard[BOARD_SIZE][BOARD_SIZE]);
+
 // 初始化遍历方向起始点
 void initDirectionStartPoint();
 

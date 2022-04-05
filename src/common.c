@@ -40,6 +40,22 @@ int doSth() {
     return 0;
 }
 
+void copyBoard(int board[BOARD_SIZE][BOARD_SIZE], int newBoard[BOARD_SIZE][BOARD_SIZE]) {
+    for (int  i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            newBoard[i][j] = board[i][j];
+        }
+    }
+}
+
+void revertBoard(int board[BOARD_SIZE][BOARD_SIZE], int newBoard[BOARD_SIZE][BOARD_SIZE]) {
+    for (int  i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            newBoard[i][j] = getOp(board[i][j]);
+        }
+    }
+}
+
 void initDirectionStartPoint() {
     for (int i = 0; i < BOARD_SIZE; ++i) {
         start[0][i].x = 0;

@@ -4,11 +4,9 @@
 #define SOULGOMOKU_SEARCH_H
 
 #include "evaluate.h"
-
-int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth, int width);
-
-int evaluateSituation(int board[MAP_SIZE][MAP_SIZE]) {
-
-};
+#include "pickPoint.h"
 
 #endif //SOULGOMOKU_SEARCH_H
+
+int minMaxSearch(int board[BOARD_SIZE][BOARD_SIZE], int *x, int *y, int depth, int maxDepth, int width, int parentScore, int allowPruning);
+

@@ -1,40 +1,42 @@
 
 #include "search.h"
 
-int minMaxSearch(ChessType map[MAP_SIZE][MAP_SIZE], int *x, int *y, int depth, int width) {
-    Point bestPoints[20];
-    int nextNum = findTheBest(map, width, bestPoints);
-
-    if (depth == 0 || nextNum == 1) {
-        *x = bestPoints[0].x;
-        *y = bestPoints[0].y;
-        return bestPoints[0].value;
+int minMaxSearch(int board[BOARD_SIZE][BOARD_SIZE], int *x, int *y, int depth, int maxDepth, int width, int parentScore, int allowPruning) {
+    if (depth == 0) {
+        // 叶子结点，计算分数
+        return evaluate(board);
     }
-
-    ChessType searchMap[MAP_SIZE][MAP_SIZE];
-    for (int i = 0; i < MAP_SIZE; ++i) {
-        for (int j = 0; j < MAP_SIZE; ++j) {
-            searchMap[i][j] = map[i][j];
-            // 双方交换
-            if (searchMap[i][j] == WHITE) {
-                searchMap[i][j] = BLACK;
+    int side = depth % 2 == 0 ? SELF : OP;
+    Coord candidate[20];
+    int minMaxScore;
+    int num = pickPoint(board, side, width, candidate);
+    for (int i = 0; i < num; ++i) {
+        int newBoard[BOARD_SIZE][BOARD_SIZE];
+        copyBoard(board, newBoard);
+        newBoard[candidate[i].x][candidate[i].y] = side;
+        int score = minMaxSearch(newBoard, x, y, depth - 1, maxDepth, width, minMaxScore, i != 0);
+        if (i == 0) {
+            minMaxScore = score;
+            if (depth == maxDepth) {
+                *x = candidate[i].x;
+                *y = candidate[i].y;
             }
-            else if (searchMap[i][j] == BLACK) {
-                searchMap[i][j] = WHITE;
+            continue;
+        }
+        if (allowPruning) {
+            // alpha-bata 剪枝
+            if (side == SELF && minMaxScore >= parentScore || side == OP && minMaxScore <= parentScore) {
+                return minMaxScore;
+            }
+        }
+        if (side == SELF && score > minMaxScore || side == OP && score < minMaxScore) {
+            minMaxScore = score;
+            if (depth == maxDepth) {
+                *x = candidate[i].x;
+                *y = candidate[i].y;
             }
         }
     }
-    int bestPointValue = -1;
-    int x0, y0;
-    for (int i = 0; i < nextNum; ++i) {
-        searchMap[bestPoints[i].x][bestPoints[i].y] = BLACK;
-        int maxValue = minMaxSearch(searchMap, &x0, &y0, depth - 1, width);
-        searchMap[bestPoints[i].x][bestPoints[i].y] = EMPTY;
-        if (maxValue > bestPointValue) {
-            bestPointValue = maxValue;
-            *x = bestPoints[i].x;
-            *y = bestPoints[i].y;
-        }
-    }
-    return bestPointValue;
+    return minMaxScore;
 }
+

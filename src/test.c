@@ -1,7 +1,6 @@
 
 //#include "search.h"
-#include "common.h"
-#include "pickPoint.h"
+#include "search.h"
 #include "unitTest.h"
 
 //void printBoard(ChessType board[MAP_SIZE][MAP_SIZE]);
@@ -9,7 +8,7 @@
 
 int main() {
     init();
-    t_pickPoint();
+    t_minMaxSearch();
 
 
 //    showBoard(board, 1);

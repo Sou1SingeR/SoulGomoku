@@ -8,11 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#define Stn int
 #define SELF 1
 #define OP -1
 #define EM 0
-#define BOARD_SIZE 15
+#define BOARD_SIZE 20
 
 typedef struct Coord {
     int x;
@@ -32,6 +31,8 @@ extern int directX[4];
 extern int directY[4];
 extern int startNum[4];
 extern Coord start[4][BOARD_SIZE * 2];
+extern int gBoard[BOARD_SIZE][BOARD_SIZE];
+extern int size;
 
 // 判断是否在棋盘内
 int inBoard(int x, int y);
@@ -43,7 +44,7 @@ int isEmpty(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 int isSelf(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 
 // 判断是否为对方棋子
-int isOpponent(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
+int isOp(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 
 // 获取另一种棋子类型
 int getOp(int side);
@@ -69,10 +70,17 @@ void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean);
 // 将棋盘状态以及分数打印到控制台
 void showBoardWithScore(int board[BOARD_SIZE][BOARD_SIZE], int score[BOARD_SIZE][BOARD_SIZE], int ifClean);
 
+// 棋盘复位
+void resetBoard(int board[BOARD_SIZE][BOARD_SIZE]);
+
 // 生成指定局面
 void generateBoard(int board[BOARD_SIZE][BOARD_SIZE], Coord *move, int moveNum, int firstSide);
 
 // 初始化
 void init();
 
+// 棋型数组加一
+void addOne(int num[3], int type);
 
+// 棋型数组减一
+void minusOne(int num[3], int type);

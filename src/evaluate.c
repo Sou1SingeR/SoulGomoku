@@ -1,7 +1,5 @@
 #include "evaluate.h"
 
-
-
 int evaluate(int board[BOARD_SIZE][BOARD_SIZE]) {
     int score = 0;
     // d 遍历所有方向, i 遍历该方向的所有起点, j 遍历对应的 1 维空间
@@ -50,11 +48,6 @@ int evaluate(int board[BOARD_SIZE][BOARD_SIZE]) {
 
                 // TODO: 计分
                 int bothEmpty = isEmpty(board, x, y) && isEmpty(board, x - directX[d] * 5, y - directY[d] * 5);
-                Coord fivePoint[5];
-                for (int k = 0; k < 5; ++k) {
-                    fivePoint[5 - 1 - k].x = x - directX[d] * k;
-                    fivePoint[5 - 1 - k].y = y - directY[d] * k;
-                }
                 int thisScore = getScore(pattern1, pattern2, bothEmpty);
                 if (lastScore >= 0 && thisScore > lastScore || lastScore <= 0 && thisScore < lastScore) {
                     lastScore = thisScore;
@@ -68,35 +61,12 @@ int evaluate(int board[BOARD_SIZE][BOARD_SIZE]) {
                     --cd;
                 }
             }
-            if (cd == 0) {
-                rowScore += lastScore;
-            }
+            rowScore += lastScore;
+
             score += rowScore;
         }
     }
     return score;
-}
-
-void addOne(int num[3], int type) {
-    // 棋型数组计数器中对应的棋子类型加一
-    if (type == EM) {
-        num[0]++;
-    } else if (type == SELF) {
-        num[1]++;
-    } else if (type == OP) {
-        num[2]++;
-    }
-}
-
-void minusOne(int num[3], int type) {
-    // 棋型数组计数器中对应的棋子类型减一
-    if (type == EM) {
-        num[0]--;
-    } else if (type == SELF) {
-        num[1]--;
-    } else if (type == OP) {
-        num[2]--;
-    }
 }
 
 int getScore(int pattern1[3], int pattern2[3], int bothEmpty) {
@@ -123,5 +93,3 @@ int getScore(int pattern1[3], int pattern2[3], int bothEmpty) {
     }
     return 0;
 }
-
-

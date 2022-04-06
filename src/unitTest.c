@@ -36,7 +36,7 @@ void t_pickPoint() {
     showBoard(board, 0);
 
     Coord point[10];
-    int num = pickPoint(board, 10, point);
+    int num = pickPoint(board, SELF, 10, point);
     printf("return: %d\n", num);
     for (int i = 0; i < num; ++i) {
         printf("(%d, %d) ", point[i].x, point[i].y);
@@ -89,11 +89,11 @@ void t_setScore() {
                 }
             }
             for (int j = 5 - 1; ; ++j) {
-                for (int j = 0; j < BOARD_SIZE; ++j) {
+                for (int j = 0; j < size; ++j) {
                     printf("%d, ", board[j][i]);
                 }
                 printf("\ncache: %d, %d, %d, %d, %d, cacheIdx: %d, pattern1: %d, %d, %d, pattern2: %d, %d, %d\n", cache[0], cache[1], cache[2], cache[3], cache[4], cacheIdx, pattern1[0], pattern1[1], pattern1[2], pattern2[0], pattern2[1], pattern2[2]);
-                for (int k = 0; k < BOARD_SIZE; ++k) {
+                for (int k = 0; k < size; ++k) {
                     printf("%d, ", thisScore[k]);
                 }
                 printf("\n\n");
@@ -140,4 +140,50 @@ void t_setScore() {
         point[i].y = bestPoints[i].y;
     }
     printf("\n");
+}
+
+void t_evaluate() {
+    init();
+    int board[BOARD_SIZE][BOARD_SIZE] = {0};
+
+    int moveNum = 14;
+    Coord move[100] = {
+            {13, 11}, {8, 8},
+            {14, 10}, {9, 10},
+            {12, 13}, {10, 10},
+            {11, 13}, {11, 11},
+            {9, 9}, {12, 12},
+            {2, 2}, {2, 3},
+            {3, 2}, {3, 3}
+    };
+    generateBoard(board, move, moveNum, SELF);
+    showBoard(board, 0);
+    int score = evaluate(board);
+    printf("\nTotal score: %d\n", score);
+}
+
+void t_minMaxSearch() {
+    init();
+    int board[BOARD_SIZE][BOARD_SIZE] = {0};
+
+    int moveNum = 14;
+    Coord move[100] = {
+            {13, 11}, {8, 8},
+            {14, 10}, {9, 10},
+            {12, 13}, {10, 10},
+            {11, 13}, {11, 11},
+            {9, 9}, {12, 12},
+            {2, 2}, {2, 3},
+            {3, 2}, {3, 3}
+    };
+    generateBoard(board, move, moveNum, SELF);
+    showBoard(board, 0);
+
+    int x, y;
+    clock_t time0 = clock();
+    minMaxSearch(board, &x, &y, 8, 8, 10, 0, 0);
+    clock_t time1 = clock();
+    double dur = (double)(time1 - time0) / CLOCKS_PER_SEC;
+
+    printf("bestPoint: (%2d,%2d), use time: %fs", x, y, dur);
 }

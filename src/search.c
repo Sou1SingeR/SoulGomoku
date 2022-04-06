@@ -36,7 +36,7 @@ int minMaxSearch(int board[BOARD_SIZE][BOARD_SIZE], int *x, int *y, int depth, i
     int minMaxScore;
     int num = pickPoint(board, side, width, candidate);
     for (int i = 0; i < num; ++i) {
-        int newBoard[BOARD_SIZE][BOARD_SIZE];
+        int newBoard[size][size];
         copyBoard(board, newBoard);
         newBoard[candidate[i].x][candidate[i].y] = side;
 

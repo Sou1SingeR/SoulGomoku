@@ -25,7 +25,7 @@ int pickPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, int expectedNum, Coor
         num = searchBestPoints(board, SELF, bestPoints, expectedNum);
         return num;
     } else {
-        int newBoard[BOARD_SIZE][BOARD_SIZE];
+        int newBoard[size][size];
         revertBoard(board, newBoard);
         num = searchBestPoints(newBoard, SELF, bestPoints, expectedNum);
         return num;
@@ -218,7 +218,7 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
         }
     }
 
-    showBoardWithScore(board, score, 1);
+//    showBoardWithScore(board, score, 1);
 
     Point bestPoints[100];
     int realNum = getTopN(score, bestPoints, expectedNum);
@@ -228,28 +228,6 @@ int searchBestPoints(int board[BOARD_SIZE][BOARD_SIZE], int side, Coord *point, 
 //        printf("rank %d: (%d, %d) - %d\n", i + 1, bestPoints[i].x, bestPoints[i].y, bestPoints[i].value);
     }
     return realNum;
-}
-
-void addOne(int num[3], int type) {
-    // 棋型数组计数器中对应的棋子类型加一
-    if (type == EM) {
-        num[0]++;
-    } else if (type == SELF) {
-        num[1]++;
-    } else if (type == OP) {
-        num[2]++;
-    }
-}
-
-void minusOne(int num[3], int type) {
-    // 棋型数组计数器中对应的棋子类型减一
-    if (type == EM) {
-        num[0]--;
-    } else if (type == SELF) {
-        num[1]--;
-    } else if (type == OP) {
-        num[2]--;
-    }
 }
 
 void setScore(int score[BOARD_SIZE], int pos, Coord fivePoint[5], int board[BOARD_SIZE][BOARD_SIZE], int pattern1[3], int pattern2[3], int bothEmpty) {
@@ -300,10 +278,10 @@ void setScore(int score[BOARD_SIZE], int pos, Coord fivePoint[5], int board[BOAR
 }
 
 int getTopN(int score[BOARD_SIZE][BOARD_SIZE], Point *bestPoints, int expectedN) {
-    Point maxHeap[BOARD_SIZE * BOARD_SIZE];
+    Point maxHeap[size * size];
     int l = 0;
-    for (int i = 0; i < BOARD_SIZE; ++i) {
-        for (int j = 0; j < BOARD_SIZE; ++j) {
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
             if (score[i][j] <= 40000) {
                 continue;
             }

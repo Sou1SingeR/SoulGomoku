@@ -7,7 +7,7 @@ int directY[4] = {0, 1, 1, 1};
 int startNum[4] = {BOARD_SIZE, BOARD_SIZE, BOARD_SIZE * 2 - 1, BOARD_SIZE * 2 - 1};
 Coord start[4][BOARD_SIZE * 2];
 
-//int gBoard[BOARD_SIZE][BOARD_SIZE];
+int gBoard[BOARD_SIZE][BOARD_SIZE];
 int size = BOARD_SIZE;
 
 int inBoard(int x, int y) {

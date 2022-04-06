@@ -3,9 +3,6 @@
 
 // 全局变量 //////////////////////////////////////////////////////////////////
 
-// 是否采用 SUGGEST 回应
-int g_is_suggest = 0;
-
 // 配置
 struct {
     int timeout_turn  ;  // 步时
@@ -171,6 +168,7 @@ void CmdStart(char *buf)
     }
 
     size = newSize;
+    init();
     resetBoard(gBoard);
     Print("OK");  // 成功回应
 }
@@ -190,21 +188,15 @@ void CmdTurn(char *buf)
     }
 
     // 检查对手落子位置
-    if (!inBoard(x, y) || gBoard[x][y] == EM) {
+    if (!inBoard(x, y) || gBoard[x][y] != EM) {
         PrintError("bad coordinates");
         return;
     }
     gBoard[x][y] = OP;
-
     // 计算对应并返回
-    minMaxSearch(gBoard, &x, &y, 8, 8, 10, 0, 0);
+    minMaxSearch(gBoard, &x, &y, 6, 6, 8, 0, 0);
+    gBoard[x][y] = SELF;
     Print("%d,%d", x, y);  // 回应坐标
-    if (g_is_suggest) {
-        PrintSuggest(x, y);  // 回应坐标
-    } else {
-        gBoard[x][y] = SELF;
-        Print("%d,%d", x, y);  // 回应坐标
-    }
 }
 
 /**
@@ -320,8 +312,8 @@ void CmdRectStart(char *buf)
  */
 void CmdRestart(char *buf)
 {
-//    BoardReset();  // 清空复位
-//    Print("OK");  // 成功回应
+    resetBoard(gBoard);
+    Print("OK");  // 成功回应
 }
 
 /**

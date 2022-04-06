@@ -4,29 +4,29 @@
 int minMaxSearch(int board[BOARD_SIZE][BOARD_SIZE], int *x, int *y, int depth, int maxDepth, int width, int parentScore, int allowPruning) {
     int side = depth % 2 == 0 ? SELF : OP;
     Coord candidate[20];
-    if (side == SELF && searchToFivePoint(board, SELF, candidate)) {
-        // 己方胜利
+    if (searchToFivePoint(board, side, candidate)) {
+        // 此方胜利
         if (depth == maxDepth) {
             *x = candidate[0].x;
             *y = candidate[0].y;
         }
-        return 100000000;
+        return 100000000 * side;
     }
-    if (side == OP && searchToFivePoint(board, OP, candidate)) {
-        // 对方胜利
+    if (searchToFivePoint(board, getOp(side), candidate)) {
+        // 此方失败
         if (depth == maxDepth) {
             *x = candidate[0].x;
             *y = candidate[0].y;
         }
-        return -100000000;
+        return -100000000 * side;
     }
-    if (side == SELF && searchToFourPoint(board, SELF, candidate)) {
-        // 己方活四必胜
+    if (searchToFourPoint(board, side, candidate)) {
+        // 此方活四必胜
         if (depth == maxDepth) {
             *x = candidate[0].x;
             *y = candidate[0].y;
         }
-        return 100000000;
+        return 100000000 * side;
     }
 
     if (depth == 0) {
@@ -36,7 +36,7 @@ int minMaxSearch(int board[BOARD_SIZE][BOARD_SIZE], int *x, int *y, int depth, i
     int minMaxScore;
     int num = pickPoint(board, side, width, candidate);
     for (int i = 0; i < num; ++i) {
-        int newBoard[size][size];
+        int newBoard[BOARD_SIZE][BOARD_SIZE];
         copyBoard(board, newBoard);
         newBoard[candidate[i].x][candidate[i].y] = side;
 

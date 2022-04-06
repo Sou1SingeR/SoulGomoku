@@ -25,7 +25,7 @@ int pickPoint(int board[BOARD_SIZE][BOARD_SIZE], int side, int expectedNum, Coor
         num = searchBestPoints(board, SELF, bestPoints, expectedNum);
         return num;
     } else {
-        int newBoard[size][size];
+        int newBoard[BOARD_SIZE][BOARD_SIZE];
         revertBoard(board, newBoard);
         num = searchBestPoints(newBoard, SELF, bestPoints, expectedNum);
         return num;
@@ -282,9 +282,9 @@ int getTopN(int score[BOARD_SIZE][BOARD_SIZE], Point *bestPoints, int expectedN)
     int l = 0;
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
-            if (score[i][j] <= 40000) {
-                continue;
-            }
+//            if (score[i][j] <= 40000) {
+//                continue;
+//            }
             maxHeap[l].x = i;
             maxHeap[l].y = j;
             maxHeap[l].value = score[i][j];

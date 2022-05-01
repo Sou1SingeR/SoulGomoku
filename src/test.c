@@ -1,6 +1,5 @@
 
 //#include "search.h"
-#include "search.h"
 #include "unitTest.h"
 
 //void printBoard(ChessType board[MAP_SIZE][MAP_SIZE]);

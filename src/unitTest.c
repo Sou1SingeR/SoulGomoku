@@ -166,22 +166,18 @@ void t_minMaxSearch() {
     init();
     int board[BOARD_SIZE][BOARD_SIZE] = {0};
 
-    int moveNum = 14;
+    int moveNum = 5;
     Coord move[100] = {
-            {13, 11}, {8, 8},
-            {14, 10}, {9, 10},
-            {12, 13}, {10, 10},
-            {11, 13}, {11, 11},
-            {9, 9}, {12, 12},
-            {2, 2}, {2, 3},
-            {3, 2}, {3, 3}
+            {7, 7}, {5, 5},
+            {6, 8}, {3, 3},
+            {5, 7}
     };
-    generateBoard(board, move, moveNum, SELF);
+    generateBoard(board, move, moveNum, OP);
     showBoard(board, 0);
 
     int x, y;
     clock_t time0 = clock();
-    minMaxSearch(board, &x, &y, 8, 8, 10, 0, 0);
+    minMaxSearch(board, &x, &y, 6, 6, 6, 0, 0);
     clock_t time1 = clock();
     double dur = (double)(time1 - time0) / CLOCKS_PER_SEC;
 

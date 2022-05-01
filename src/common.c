@@ -86,9 +86,6 @@ void initDirectionStartPoint() {
 }
 
 void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean) {
-    if (ifClean) {
-        system("cls");
-    }
     printf("\n");
     for (int i = size - 1; i >= 0; --i) {
         printf("%2d  ", i);
@@ -111,9 +108,6 @@ void showBoard(int board[BOARD_SIZE][BOARD_SIZE], int ifClean) {
 }
 
 void showBoardWithScore(int board[BOARD_SIZE][BOARD_SIZE], int score[BOARD_SIZE][BOARD_SIZE], int ifClean) {
-//    if (ifClean) {
-//        system("cls");
-//    }
     printf("\n");
     for (int i = size - 1; i >= 0; --i) {
         printf("\n");

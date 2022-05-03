@@ -1,10 +1,8 @@
 
 #include "gomocup.h"
-#include "botzone.h"
 
 int main()
 {
-//    gomocup();
-    botzone();
+    gomocup();
     return 0;
 }

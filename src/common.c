@@ -59,6 +59,10 @@ void revertBoard(int board[BOARD_SIZE][BOARD_SIZE], int newBoard[BOARD_SIZE][BOA
 }
 
 void initDirectionStartPoint() {
+    startNum[0] = size;
+    startNum[1] = size;
+    startNum[2] = size * 2 - 1;
+    startNum[3] = size * 2 - 1;
     for (int i = 0; i < size; ++i) {
         start[0][i].x = 0;
         start[0][i].y = i;

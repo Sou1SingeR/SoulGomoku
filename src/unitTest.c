@@ -163,23 +163,23 @@ void t_evaluate() {
 }
 
 void t_minMaxSearch() {
-    init();
-    int board[BOARD_SIZE][BOARD_SIZE] = {0};
-
-    int moveNum = 5;
     Coord move[100] = {
-            {7, 7}, {5, 5},
-            {6, 8}, {3, 3},
-            {5, 7}
+            {7, 7}, {6, 8},
+            {6, 7}, {5, 8},
+            {4, 8}, {5, 7},
+            {7, 9}, {5, 6},
+            {5, 5}, {5, 10},
+            {5, 9}, {7, 10},
+            {6, 10}, {3, 7}
     };
-    generateBoard(board, move, moveNum, OP);
-    showBoard(board, 0);
+    generateBoard(gBoard, move, 14, SELF);
+    showBoard(gBoard, 0);
 
     int x, y;
     clock_t time0 = clock();
-    minMaxSearch(board, &x, &y, 6, 6, 6, 0, 0);
+    int score = minMaxSearch(gBoard, &x, &y, 6, 6, 8, 0, 0);
     clock_t time1 = clock();
     double dur = (double)(time1 - time0) / CLOCKS_PER_SEC;
 
-    printf("bestPoint: (%2d,%2d), use time: %fs", x, y, dur);
+    printf("bestPoint: (%d, %d), score: %d, use time: %fs", x, y, score, dur);
 }

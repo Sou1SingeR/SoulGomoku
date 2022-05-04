@@ -6,7 +6,9 @@
 //void revertSide(ChessType board[MAP_SIZE][MAP_SIZE]);
 
 int main() {
+    size = 15;
     init();
+    resetBoard(gBoard);
     t_minMaxSearch();
 
 

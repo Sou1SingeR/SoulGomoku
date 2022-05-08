@@ -164,15 +164,13 @@ void t_evaluate() {
 
 void t_minMaxSearch() {
     Coord move[100] = {
-            {7, 7}, {6, 8},
-            {6, 7}, {5, 8},
-            {4, 8}, {5, 7},
-            {7, 9}, {5, 6},
-            {5, 5}, {5, 10},
-            {5, 9}, {7, 10},
-            {6, 10}, {3, 7}
+            {7, 7}, {7, 6},
+            {6, 6}, {8, 8},
+            {6, 8}, {6, 7},
+            {5, 9}, {8, 6},
+            {3, 11}, {4, 10}
     };
-    generateBoard(gBoard, move, 14, SELF);
+    generateBoard(gBoard, move, 10, SELF);
     showBoard(gBoard, 0);
 
     int x, y;
@@ -181,5 +179,11 @@ void t_minMaxSearch() {
     clock_t time1 = clock();
     double dur = (double)(time1 - time0) / CLOCKS_PER_SEC;
 
-    printf("bestPoint: (%d, %d), score: %d, use time: %fs", x, y, score, dur);
+    int searchNum = 1;
+    for (int i = 0; i < 6; ++i) {
+        searchNum *= 8;
+    }
+
+    printf("bestPoint: (%d, %d), score: %d, pickTime: %fs, evaluateTime: %fs, totalTime: %fs\n", x, y, score, pickTime, evaluateTime, dur);
+    printf("leafNum: %d, searchNum: %d, pruningNum: %d, pruningRate: %lf%%\n", leafNum, searchNum, pruningNum, 100 - leafNum * 100. / searchNum);
 }

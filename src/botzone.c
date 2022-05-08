@@ -576,15 +576,7 @@ int minMaxSearch(int board[BOARD_SIZE][BOARD_SIZE], int *x, int *y, int depth, i
         }
         return 100000000 * side;
     }
-    if (searchToFivePoint(board, getOp(side), candidate)) {
-        // 此方失败
-        if (depth == maxDepth) {
-            *x = candidate[0].x;
-            *y = candidate[0].y;
-        }
-        return -100000000 * side;
-    }
-    if (searchToFourPoint(board, side, candidate)) {
+    if (!searchToFivePoint(board, getOp(side), candidate) && searchToFourPoint(board, side, candidate)) {
         // 此方活四必胜
         if (depth == maxDepth) {
             *x = candidate[0].x;
